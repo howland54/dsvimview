@@ -15,7 +15,6 @@ VimView::VimView(char	*startup_file_name)
    nOfCameras = 0;
    imageSkipvalue = 0;
    isActive = false;
-   nOfDSPLLights = 0;
    recordingPaused = false;
    IniFile	iniFile;
    char *subscriptionNames[MAX_N_OF_CAMERAS];
@@ -95,29 +94,9 @@ VimView::VimView(char	*startup_file_name)
          gardaAddress.setAddress(gardaIPAddress);
          gardaSocketNumber = GARDA_SOCKET_NUMBER;
          netSocket->bind(GARDA_SOCKET_NUMBER);
-#if 0
-         for(int lightNumber = 0; lightNumber < MAX_N_OF_LIGHTS; lightNumber++)
-            {
-               char lightLabel[32];
-               snprintf(lightLabel,32,"LIGHT_%d",lightNumber+1);
-               char *lightPosition = iniFile.readString(lightLabel,"LIGHT_POSITION", NO_LIGHT_POSITION);
-               if(!strcmp(lightPosition,NO_LIGHT_POSITION))
-                  {
-                     free(lightPosition );
-                     continue;
-                  }
-               else
-                  {
-                     lightControlWidgets[nOfDSPLLights] =  new LightControlWidget();
-                     lightControlWidgets[nOfDSPLLights]->setPosition(lightPosition);
-                     connect(lightControlWidgets[nOfDSPLLights],SIGNAL(changeLightLevel(int)), this, SLOT(changeLightLevel(int)));
-                     connect(lightControlWidgets[nOfDSPLLights],SIGNAL(changeLightMode(int)), this, SLOT(changeLightMode(int)));
 
-                     nOfDSPLLights++;
-                     free( lightPosition);
-                  }
-            }
-#endif
+         sensorPage = new SensorPage();
+         sensorPage->show();
       }
 
 
@@ -367,51 +346,7 @@ void VimView::changeGainValue(double newGain, int theCamera)
 
 }
 
-void VimView::changeLightLevel(int newLevel)
-{
-   LightControlWidget *sendingLightControlWidget = (LightControlWidget *)sender();
-   int sendingLight = -99;
-   for(int lightNumber = 0; lightNumber < nOfDSPLLights; lightNumber++)
-      {
-         if(sendingLightControlWidget == lightControlWidgets[lightNumber])
-            {
-               sendingLight =  lightNumber;
-               break;
-            }
-      }
-   if(-99 != sendingLight)
-      {
-         image::image_parameter_t imageParameter;
-         imageParameter.key = "LIGHT_LEVEL";
-         imageParameter.value = QString::number(newLevel,'f',1).toStdString();
-         imageParameter.cameraNumber = sendingLight;
-         myLcm->publish("COMMAND_PARAMETERS",&imageParameter);
-      }
 
-}
-
-void VimView::changeLightMode(int newMode)
-{
-   LightControlWidget *sendingLightControlWidget = (LightControlWidget *)sender();
-   int sendingLight = -99;
-   for(int lightNumber = 0; lightNumber < nOfDSPLLights; lightNumber++)
-      {
-         if(sendingLightControlWidget == lightControlWidgets[lightNumber])
-            {
-               sendingLight =  lightNumber;
-               break;
-            }
-      }
-   if(-99 != sendingLight)
-      {
-         image::image_parameter_t imageParameter;
-         imageParameter.key = "LIGHT_CHANNEL";
-         imageParameter.value = QString::number(newMode,'f',1).toStdString();
-         imageParameter.cameraNumber = sendingLight;
-         myLcm->publish("COMMAND_PARAMETERS",&imageParameter);
-      }
-
-}
 
 void VimView::changeExposureValue(double newExposure, int theCamera)
 {
@@ -465,17 +400,6 @@ void VimView::changeAutoExposure(bool isAuto, double theMin, double theMax, int 
 
 }
 
-void VimView::showLightControl(bool showMe)
-{
-   if(showMe)
-      {
-         lightGroupBox->show();
-      }
-   else
-      {
-         lightGroupBox->hide();
-      }
-}
 
 void VimView::changeDecimationFactor(int theFactor)
 {
@@ -495,13 +419,7 @@ QRect VimView::getMyGeometry()
    return myGeometry;
 }
 
-void VimView::updateLight(int lightNumber, double humidity, double temperature, int lightLevel, int lightMode, double secsSince, int nackCount)
-{
-   if(lightNumber < nOfDSPLLights)
-      {
-         lightControlWidgets[lightNumber]->updateLight(humidity, temperature, lightLevel, lightMode,secsSince, nackCount);
-      }
-}
+
 
 
 void    VimView::updateImage(int theImage)
@@ -530,6 +448,7 @@ void VimView::shutDown()
 {
 
    stWinch->close();
+   sensorPage->close();
    emit closing();
 }
 

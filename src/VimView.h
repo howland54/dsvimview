@@ -11,6 +11,7 @@
 #include "VimCameraControl.h"
 #include "LightControlWidget.h"
 #include "SystemParameterControl.h"
+#include "SensorPage.h"
 #include "cameradefines.h"
 #include "Stwinch.h"
 
@@ -43,7 +44,6 @@ public:
    void                   setDisplaySize(int cameraNumber, int width, int height);
    void                   shutDown();
    QRect                  getMyGeometry();
-   void                   updateLight(int lightNumber, double humidity, double temperature, int lightLevel, int lightMode,double secsSince, int nackCount);
    void                   setRecordingActallyPaused(bool isIt);
    void                   setWriteSuccess(bool isItSuccessful);
    void                   setAltitude(double theAltitude);
@@ -55,15 +55,13 @@ private:
    bool                    equalizeDisplay[MAX_N_OF_CAMERAS];
    bool                    stretchDisplay[MAX_N_OF_CAMERAS];
    bool                    histogramDisplay[MAX_N_OF_CAMERAS];
-   QGroupBox               *lightGroupBox;
 
    QTimer                  *imgReceiveTimer;
 
    unsigned char           *imageForDisplay;
    SystemParameterControl  *systemParameterControl;
    VimCameraControl        *vimCameraControl[MAX_N_OF_CAMERAS];
-   LightControlWidget      *lightControlWidgets[MAX_N_OF_LIGHTS];
-   int                     nOfDSPLLights;
+   SensorPage              *sensorPage;
 
    int                     nOfCameras;
    int                    imageDisplayWidth[MAX_N_OF_CAMERAS];
@@ -90,8 +88,6 @@ private slots:
    void                   updateImage(int theImage);
    void                   changeExposureValue(double newExposure, int theCamera);
    void                   changeGainValue(double newGain, int theCamera);
-   void                   changeLightLevel(int newLevel);
-   void                   changeLightMode(int newMode);
    void                   changeAutoGain(bool isAuto, double theMin, double theMax, int theCamera);
    void                   toggleBinning(bool bin, int theCamera);
    void                   changeAutoExposure(bool isAuto, double theMin, double theMax, int theCamera);
@@ -102,7 +98,6 @@ private slots:
    void                   startTimedStills(double theInterval, int theCameraNumber);
    void                   stopTimedStills(int theCameraNumber);
    void                   changeDecimationFactor(int theFactor);
-   void                   showLightControl(bool showMe);
    void                   sendGardaRateChange(int theInterval);
    void                   pauseRecording(bool pauseIt);
    void                   showWinchFly(bool showIt);

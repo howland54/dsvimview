@@ -40,24 +40,24 @@ LIBS += -lopencv_videoio
 
 
 SOURCES += main.cpp\
+    SensorPage.cpp \
     SystemParameterControl.cpp \
         VimView.cpp \
     ImageAcquisitionThread.cpp \
     VimCameraControl.cpp \
     qcustomplot.cpp \
     RepetitionControlWidget.cpp \
-    LightControlWidget.cpp \
     qledindicator.cpp \
     Stwinch.cpp
 
 HEADERS  += VimView.h \
     ImageAcquisitionThread.h \
+    SensorPage.h \
     SystemParameterControl.h \
     VimCameraControl.h \
     qcustomplot.h \
     RepetitionControlWidget.h \
     cameradefines.h \
-    LightControlWidget.h \
     qledindicator.h \
     Stwinch.h
 

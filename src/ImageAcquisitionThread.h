@@ -24,7 +24,6 @@
 #include <marine_sensor/marine_sensor/fathometer_t.hpp>
 #include <marine_sensor/marine_sensor/ctd_t.hpp>
 
-//#include "../../vimlcmdefs/dsplLight/lightStatus_t.hpp"
 //#include "../../vimlcmdefs/senlcm/altimeter_t.hpp"
 //#include "../../vimlcmdefs/senlcm/fathometer_t.hpp"
 //include "../../vimlcmdefs/senlcm/ctd_t.hpp"
@@ -58,7 +57,6 @@ public:
 private:
 
    lcm::Subscription                   *imageSub;
-   lcm::Subscription                   *lightSub;
    lcm::Subscription                   *parameterSub;
 
    lcm::Subscription                   *fathometerSub;

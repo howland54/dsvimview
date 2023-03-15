@@ -156,15 +156,7 @@ void parameter_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& ch
       }
 
 }
-#if 0
-void light_t_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel, const dsplLight::lightStatus_t *lightStatus, State *user)
-{
-   //qDebug() << "in callback channel = " << channel.c_str();
-   theMainWindow->updateLight(lightStatus->lightNumber, lightStatus->humidity,lightStatus->temperature, lightStatus->lightLevel, lightStatus->channelMode,
-                              lightStatus->secsSinceComms, lightStatus->nackCount);
 
-}
-#endif
 void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channel,const image::image_t *image, State *user)
 {
 
