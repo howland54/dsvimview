@@ -44,6 +44,8 @@ private:
     QLabel      *rollValue;
     QLabel      *headingLabel;
     QLabel      *headingValue;
+    QLabel      *microstrainAgeLabel;
+    QLabel      *microstrainAgeValue;
 
 
 
