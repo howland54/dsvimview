@@ -18,15 +18,15 @@
 #include <lcm/lcm.h>
 #include <lcm/lcm-cpp.hpp>
 
-#include <image/image/image_t.hpp>
-#include <image/image/image_parameter_t.hpp>
-#include <marine_sensor/marine_sensor/altimeter_t.hpp>
-#include <marine_sensor/marine_sensor/fathometer_t.hpp>
-#include <marine_sensor/marine_sensor/ctd_t.hpp>
+#include "../../habcam-lcmtypes/image/image/image_t.hpp"
+#include "../../habcam-lcmtypes/image/image/image_parameter_t.hpp"
 
-//#include "../../vimlcmdefs/senlcm/altimeter_t.hpp"
-//#include "../../vimlcmdefs/senlcm/fathometer_t.hpp"
-//include "../../vimlcmdefs/senlcm/ctd_t.hpp"
+#include "../../habcam-lcmtypes/marine_sensor/marine_sensor/marineSensorAltimeter_t.hpp"
+#include "../../habcam-lcmtypes/marine_sensor/marine_sensor/MarineSensorFathometer_t.hpp"
+#include "../../habcam-lcmtypes/marine_sensor/marine_sensor/MarineSensorCtd_t.hpp"
+#include "../../habcam-lcmtypes/marine_sensor/marine_sensor/MarineSensorGPS_t.hpp"
+#include "../../habcam-lcmtypes/marine_sensor/marine_sensor/MarineSensorAttitudeSensor_t.hpp"
+
 
 
 using namespace std;
@@ -59,6 +59,7 @@ private:
    lcm::Subscription                   *imageSub;
    lcm::Subscription                   *parameterSub;
 
+   lcm::Subscription                   *attitudeSub;
    lcm::Subscription                   *fathometerSub;
    lcm::Subscription                   *altimeterSub;
    lcm::Subscription                   *ctdSub;

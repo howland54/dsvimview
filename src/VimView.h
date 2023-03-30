@@ -49,6 +49,8 @@ public:
    void                   setAltitude(double theAltitude);
    void                   setFathometer(double theFathometerValue);
    void                   setFishDepth(double theDepth);
+   void                   setFishAttitude(double heading, double pitch, double roll);
+
    void                   setCalcDepth(double theCalcDepth);
 private:
    QLabel                 *imageArea[MAX_N_OF_CAMERAS];

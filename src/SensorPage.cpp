@@ -2,6 +2,19 @@
 
 SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
 {
+    ushort degree = 0x00b0;
+    degreeSymbol = QString::fromUtf16(&degree,1);
+
+    lastCTD = QDateTime::currentDateTimeUtc().addSecs(-3600);
+    lastFathometer = lastCTD;
+    lastGPS = lastCTD;
+    lastAltimeter = lastCTD;
+    lastAttitude = lastCTD;
+
+    ageTimer = new QTimer();
+    ageTimer->setInterval(250);
+    connect(ageTimer, SIGNAL(timeout()), this, SLOT(ageTimeout()));
+
     ctdGroupBox = new QGroupBox("CTD");
 
     dLabel = new QLabel("Depth:");
@@ -92,5 +105,72 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     masterLayout->addWidget(fathometerGroupBox,0,2);
     masterLayout->addWidget(altimeterGroupBox,1,0);
     masterLayout->addWidget(microstrainGroupBox,1,1);
+
+    ageTimer->start();
+
+}
+
+void SensorPage::setAttitude(double heading, double pitch, double roll)
+{
+    pitchValue->setText(QString::number(pitch, 'f', 1)+ degreeSymbol);
+    rollValue->setText(QString::number(roll, 'f', 1)+ degreeSymbol);
+    headingValue->setText(QString::number(heading, 'f', 1)+ degreeSymbol);
+    lastAttitude = QDateTime::currentDateTimeUtc();
+}
+
+void SensorPage::setCTD(double d, double t)
+{
+    dValue->setText(QString::number(d,'f',2) + "m");
+    tValue->setText(QString::number(t,'f',2) + degreeSymbol);
+    lastCTD = QDateTime::currentDateTimeUtc();
+}
+
+void SensorPage::setAltimeter(double theAltitude)
+{
+    altimeterValue->setText(QString::number(theAltitude,'f',1) + "m");
+    lastAltimeter = QDateTime::currentDateTimeUtc();
+}
+
+void SensorPage::setFathometer(double theDepth)
+{
+    fathometerValue->setText(QString::number(theDepth,'f',1)+ "m");
+    lastFathometer = QDateTime::currentDateTimeUtc();
+}
+void SensorPage::setGPS(double inLat, double inLon)
+{
+    int degrees = int(trunc(inLat));      //was int(qRound(coord)) removed-mjs-11/24/2014 to fix error in displayed value cause by round up.
+    double minutes = (inLat - degrees) * 60;
+    latitudeValue->setText(QString::number(degrees) + degreeSymbol + " " + QString::number(minutes,'f',2)  + "'");
+
+    degrees = int(trunc(inLon));
+    minutes = (inLon - degrees) * 60.0;
+    longitudeValue->setText(QString::number(degrees) + degreeSymbol + " " + QString::number(minutes,'f',2)  + "'");
+    lastGPS = QDateTime::currentDateTimeUtc();
+}
+
+void SensorPage::ageTimeout()
+{
+    QDateTime  now = QDateTime::currentDateTimeUtc();
+
+    qint64 delta = lastCTD.msecsTo(now);
+    double dt = delta/1000.0;
+    ctdAgeValue->setText(QString::number(dt,'f',1) + "s");
+
+    delta = lastFathometer.msecsTo(now);
+    dt = delta/1000.0;
+    fathometerAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+
+    delta = lastAltimeter.msecsTo(now);
+    dt = delta/1000.0;
+    altimeterAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+
+    delta = lastGPS.msecsTo(now);
+    dt = delta/1000.0;
+    gpsAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+
+    delta = lastAttitude.msecsTo(now);
+    dt = delta/1000.0;
+    microstrainAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+
 
 }

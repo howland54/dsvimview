@@ -29,14 +29,14 @@ public:
 };
 
 void marine_sensor_altimeter_t_callback0(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
-                                  const marine_sensor::altimeter_t *altimeterData, State *user)
+                                  const marine_sensor::marineSensorAltimeter_t *altimeterData, State *user)
 {
    theMainWindow->setAltitude(altimeterData->altitude);
 
 }
 
 void marine_sensor_fathometer_t_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
-                                  const marine_sensor::fathometer_t *fathometerData, State *user)
+                                  const marine_sensor::MarineSensorFathometer_t *fathometerData, State *user)
 {
    if(channel == "FATHOMETER")
       {
@@ -49,11 +49,18 @@ void marine_sensor_fathometer_t_callback(const lcm::ReceiveBuffer *rbuf, const s
 }
 
 void marine_sensor_ctd_t_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
-                           const marine_sensor::ctd_t *msData, State *user)
+                           const marine_sensor::MarineSensorCtd_t *ctdData, State *user)
 {
-   theMainWindow->setFishDepth(msData->depth);
+   theMainWindow->setFishDepth(ctdData->depth);
 
 }
+
+void marine_sensor_attitude_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
+                           const marine_sensor::MarineSensorAttitudeSensor_t *msData, State *user)
+{
+
+}
+
 
 void parameter_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channel,const image::image_parameter_t *imageParameter, State *user)
 {
@@ -384,6 +391,7 @@ void ImageAcquisitionThread::run()
    fathometerSub = myLcm->subscribeFunction("FATHOMETER",&marine_sensor_fathometer_t_callback, &state);
    altimeterSub = myLcm->subscribeFunction("ALTIMETER0",&marine_sensor_altimeter_t_callback0, &state);
    ctdSub = myLcm->subscribeFunction("CTD",&marine_sensor_ctd_t_callback, &state);
+   attitudeSub = myLcm->subscribeFunction("MICROSTRAIN", marine_sensor_attitude_callback, &state);
    calcDepthSubscription  = myLcm->subscribeFunction("CALC_DEPTH",&marine_sensor_fathometer_t_callback, &state);
 
    while (!stopped)

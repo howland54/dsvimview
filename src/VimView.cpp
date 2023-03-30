@@ -168,6 +168,12 @@ void VimView::setFishDepth(double theDepthValue)
 {
    stWinch->setFishDepth(theDepthValue);
 }
+
+void VimView::setFishAttitude(double heading, double pitch, double roll)
+{
+
+}
+
 void VimView::checkImgReceipt()
 {
    QDateTime nowTime = QDateTime::currentDateTimeUtc();
