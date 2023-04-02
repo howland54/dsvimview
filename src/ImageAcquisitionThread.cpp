@@ -205,8 +205,8 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    imageLock[camNum].lockForWrite();
 
 
-   cv::Mat    inputImage = cv::Mat(image->height, image->width, CV_8U, (void *)image->data.data());
-   cv::Mat    colorImage(image->width, image->height, CV_8UC3);
+   cv::Mat    inputImage = cv::Mat(image->height, image->width, CV_16UC1, (void *)image->data.data());
+   cv::Mat    colorImage(image->width, image->height, CV_16UC3);
    //cvImage = cv::Mat(image->height, image->width, CV_8U, (void *)image->data.data(),image->row_stride);
    //cv::Mat colorImage(image->width, image->height, CV_8UC3);
    //cv::Mat colorImage(image->width, image->height, CV_8UC3);
@@ -217,13 +217,13 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    if(isColor)
       {
          cv::cvtColor(inputImage,colorImage,cv::COLOR_BayerRG2BGR,0);
-         /*cv::namedWindow("windowName"); // Create a window
+        /* cv::namedWindow("windowName"); // Create a window
 
           cv::imshow("windowName", colorImage); // Show our image inside the created window.
 
           cv::waitKey(0); // Wait for any keystroke in the window
 
-          cv::destroyWindow("windowName"); //destroy the created window*/
+          cv::destroyWindow("windowName"); //destroy the created window* */
 
       }
    //if(!isColor)

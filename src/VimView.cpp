@@ -46,7 +46,7 @@ VimView::VimView(char	*startup_file_name)
             {
                char cameraLabel[32];
                snprintf(cameraLabel,32,"CAMERA_%d",cameraNumber+1);
-               subscriptionNames[nOfCameras] = iniFile.readString(cameraLabel,"SUBSCRIPTION_NAME","NONAME");
+               subscriptionNames[nOfCameras] = iniFile.readString(cameraLabel,"CHANNEL_NAME","NONAME");
 
                char *thisSN = iniFile.readString(cameraLabel,"SERIAL_NUMBER", NO_SERIAL_NUMBER);
                if(!strcmp(thisSN,NO_SERIAL_NUMBER))
