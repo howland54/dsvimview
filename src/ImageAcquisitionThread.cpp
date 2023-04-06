@@ -1,5 +1,6 @@
 #include "ImageAcquisitionThread.h"
 #include "VimView.h"
+#include "SensorPage.h"
 
 extern ImageAcquisitionThread       *imageProviderThread[MAX_N_OF_CAMERAS];
 extern QReadWriteLock               imageLock[MAX_N_OF_CAMERAS];
@@ -9,6 +10,7 @@ extern cv::Mat    displayImage[MAX_N_OF_CAMERAS];
 
 extern lcm::LCM                            *myLcm;
 extern VimView *theMainWindow;
+extern VimView *sensorPage;
 
 bool isActive;
 
@@ -51,7 +53,7 @@ void marine_sensor_fathometer_t_callback(const lcm::ReceiveBuffer *rbuf, const s
 void marine_sensor_ctd_t_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
                            const marine_sensor::MarineSensorCtd_t *ctdData, State *user)
 {
-   theMainWindow->setFishDepth(ctdData->depth);
+   theMainWindow->setCTD(ctdData->depth,ctdData->sea_water_temperature );
 
 }
 
@@ -59,6 +61,12 @@ void marine_sensor_attitude_callback(const lcm::ReceiveBuffer *rbuf, const std::
                            const marine_sensor::MarineSensorAttitudeSensor_t *msData, State *user)
 {
 
+}
+
+void marine_sensor_gps_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
+                                const marine_sensor::MarineSensorGPS_t *gpsData, State *user)
+{
+  theMainWindow->setGPS(gpsData->latitude, gpsData->longitude);
 }
 
 
@@ -171,7 +179,7 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    // qDebug() << "in callback channel = " << channel.c_str();
 
 
-   if(channel == "Vim0")
+   if(channel == "LeftColor")
       {
          camNum = 0;
          leftSkip++;
@@ -184,7 +192,7 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
                leftSkip = 0;
             }
       }
-   else if(channel == "Vim1")
+   else if(channel == "RightColor")
       {
          camNum = 1;
          rightSkip++;
@@ -205,8 +213,8 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    imageLock[camNum].lockForWrite();
 
 
-   cv::Mat    inputImage = cv::Mat(image->height, image->width, CV_16UC1, (void *)image->data.data());
-   cv::Mat    colorImage(image->width, image->height, CV_16UC3);
+   cv::Mat    colorImage = cv::Mat(image->height, image->width, CV_8UC3, (void *)image->data.data());
+   //cv::Mat    colorImage(image->width, image->height, CV_16UC3);
    //cvImage = cv::Mat(image->height, image->width, CV_8U, (void *)image->data.data(),image->row_stride);
    //cv::Mat colorImage(image->width, image->height, CV_8UC3);
    //cv::Mat colorImage(image->width, image->height, CV_8UC3);
@@ -216,8 +224,8 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    bool isColor = imageProviderThread[camNum]->getisColor();
    if(isColor)
       {
-         cv::cvtColor(inputImage,colorImage,cv::COLOR_BayerRG2BGR,0);
-        /* cv::namedWindow("windowName"); // Create a window
+        // cv::cvtColor(inputImage,colorImage,cv::COLOR_BayerRG2BGR,0);
+       /* cv::namedWindow("windowName"); // Create a window
 
           cv::imshow("windowName", colorImage); // Show our image inside the created window.
 
@@ -300,7 +308,7 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    }
    //else
    //{
-   //  cv::resize(colorImage,displayImage[camNum],destSize,0.0,0.0);
+     //cv::resize(colorImage,displayImage[camNum],destSize,0.0,0.0);
    //}
    imageProviderThread[camNum]->imageSignal();
 
@@ -329,20 +337,22 @@ ImageAcquisitionThread::ImageAcquisitionThread(int threadNum,QWidget *parent) : 
    stretch = false;
    isColor = false;
    isActive = true;
-   if(threadNum = 0)
+   if(threadNum == 0)
       {
          leftSkip = 0;
+         snprintf(subscriptionName,63,"LeftColor");
       }
    else
       {
          rightSkip = 0;
+         snprintf(subscriptionName,63,"RightColor");
       }
 
 
-   char subscriptionName[64];
-   char parameterSubName[64];
-   snprintf(subscriptionName,63,"Vim%0d",threadNum);
-   snprintf(parameterSubName,63,"VimParameter%0d",threadNum);
+   //char subscriptionName[64];
+   //char parameterSubName[64];
+   //snprintf(subscriptionName,63,"Vim%0d",threadNum);
+   //snprintf(parameterSubName,63,"VimParameter%0d",threadNum);
 
 }
 
@@ -393,6 +403,8 @@ void ImageAcquisitionThread::run()
    ctdSub = myLcm->subscribeFunction("CTD",&marine_sensor_ctd_t_callback, &state);
    attitudeSub = myLcm->subscribeFunction("MICROSTRAIN", marine_sensor_attitude_callback, &state);
    calcDepthSubscription  = myLcm->subscribeFunction("CALC_DEPTH",&marine_sensor_fathometer_t_callback, &state);
+   gpsSubscription  = myLcm->subscribeFunction("GPS",&marine_sensor_gps_callback, &state);
+
 
    while (!stopped)
       {

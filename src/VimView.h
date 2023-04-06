@@ -50,6 +50,8 @@ public:
    void                   setFathometer(double theFathometerValue);
    void                   setFishDepth(double theDepth);
    void                   setFishAttitude(double heading, double pitch, double roll);
+   void                   setCTD(double depth, double temp);
+   void                   setGPS(double latitude, double longitude);
 
    void                   setCalcDepth(double theCalcDepth);
 private:

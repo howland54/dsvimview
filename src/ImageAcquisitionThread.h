@@ -64,6 +64,7 @@ private:
    lcm::Subscription                   *altimeterSub;
    lcm::Subscription                   *ctdSub;
    lcm::Subscription                   *calcDepthSubscription;
+   lcm::Subscription                   *gpsSubscription;
 
    int                                 skip;
 

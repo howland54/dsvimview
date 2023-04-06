@@ -46,7 +46,7 @@ VimView::VimView(char	*startup_file_name)
             {
                char cameraLabel[32];
                snprintf(cameraLabel,32,"CAMERA_%d",cameraNumber+1);
-               subscriptionNames[nOfCameras] = iniFile.readString(cameraLabel,"CHANNEL_NAME","NONAME");
+               subscriptionNames[nOfCameras] = iniFile.readString(cameraLabel,"COLOR_CHANNEL_NAME","NONAME");
 
                char *thisSN = iniFile.readString(cameraLabel,"SERIAL_NUMBER", NO_SERIAL_NUMBER);
                if(!strcmp(thisSN,NO_SERIAL_NUMBER))
@@ -125,7 +125,15 @@ VimView::VimView(char	*startup_file_name)
          else
             {
                char theSubscriptionName[256];
-               snprintf(theSubscriptionName,255,"Vim%0d",thisCamera);
+               //snprintf(theSubscriptionName,255,"Vim%0d",thisCamera);
+               if(0 == thisCamera)
+                 {
+                   snprintf(theSubscriptionName,255,"LeftColor");
+                 }
+               else
+                 {
+                   snprintf(theSubscriptionName,255,"RightColor");
+                 }
                imageProviderThread[thisCamera]->setSubscriptionName(theSubscriptionName);
             }
          imageProviderThread[thisCamera]->start();
@@ -152,6 +160,7 @@ VimView::VimView(char	*startup_file_name)
 void VimView::setAltitude(double theAltitude)
 {
    stWinch->setAltitude(theAltitude);
+   sensorPage->setAltimeter(theAltitude);
 }
 
 void VimView::setCalcDepth(double theCalcDepth)
@@ -162,6 +171,7 @@ void VimView::setCalcDepth(double theCalcDepth)
 void VimView::setFathometer(double theFathometerValue)
 {
    stWinch->setFathometer(theFathometerValue);
+   sensorPage->setAltimeter(theFathometerValue);
 }
 
 void VimView::setFishDepth(double theDepthValue)
@@ -169,8 +179,19 @@ void VimView::setFishDepth(double theDepthValue)
    stWinch->setFishDepth(theDepthValue);
 }
 
+void VimView::setCTD(double theDepth, double theT)
+{
+  stWinch->setFishDepth(theDepth);
+  sensorPage->setCTD(theDepth, theT);
+}
+
 void VimView::setFishAttitude(double heading, double pitch, double roll)
 {
+}
+
+void VimView::setGPS(double latitude, double longitude)
+{
+  sensorPage->setGPS(latitude, longitude);
 
 }
 
@@ -434,7 +455,7 @@ void    VimView::updateImage(int theImage)
    lastImageDateTime = QDateTime::currentDateTimeUtc();
    if(vimCameraControl[theImage]->getIsColor())
       {
-         imageArea[theImage]->setPixmap(QPixmap::fromImage(QImage(displayImage[theImage].data, displayImage[theImage].cols, displayImage[theImage].rows, displayImage[theImage].step, QImage::Format_RGB888)));
+         imageArea[theImage]->setPixmap(QPixmap::fromImage(QImage(displayImage[theImage].data, displayImage[theImage].cols, displayImage[theImage].rows, displayImage[theImage].step, QImage::Format_BGR888)));
       }
 
    else
