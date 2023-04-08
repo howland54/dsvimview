@@ -60,7 +60,7 @@ void marine_sensor_ctd_t_callback(const lcm::ReceiveBuffer *rbuf, const std::str
 void marine_sensor_attitude_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
                            const marine_sensor::MarineSensorAttitudeSensor_t *msData, State *user)
 {
-
+  theMainWindow->setFishAttitude(msData->heading, msData->pitch, msData->roll);
 }
 
 void marine_sensor_gps_callback(const lcm::ReceiveBuffer *rbuf, const std::string& channel,
@@ -399,9 +399,9 @@ void ImageAcquisitionThread::run()
    imageSub = myLcm->subscribeFunction( subscriptionName, &image_t_callback, &state);
    parameterSub = myLcm->subscribeFunction("M_STATUS_PARAMETERS",&parameter_t_callback, &state);
    fathometerSub = myLcm->subscribeFunction("FATHOMETER",&marine_sensor_fathometer_t_callback, &state);
-   altimeterSub = myLcm->subscribeFunction("ALTIMETER0",&marine_sensor_altimeter_t_callback0, &state);
+   altimeterSub = myLcm->subscribeFunction("ALTIMETER",&marine_sensor_altimeter_t_callback0, &state);
    ctdSub = myLcm->subscribeFunction("CTD",&marine_sensor_ctd_t_callback, &state);
-   attitudeSub = myLcm->subscribeFunction("MICROSTRAIN", marine_sensor_attitude_callback, &state);
+   attitudeSub = myLcm->subscribeFunction("ATTITUDE", marine_sensor_attitude_callback, &state);
    calcDepthSubscription  = myLcm->subscribeFunction("CALC_DEPTH",&marine_sensor_fathometer_t_callback, &state);
    gpsSubscription  = myLcm->subscribeFunction("GPS",&marine_sensor_gps_callback, &state);
 

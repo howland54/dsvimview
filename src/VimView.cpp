@@ -16,6 +16,7 @@ VimView::VimView(char	*startup_file_name)
    imageSkipvalue = 0;
    isActive = false;
    recordingPaused = false;
+   double microstrainTimeoutCriteria, ctdTimeoutCriteria, altimeterTimeoutCriteria, fathometerTimeoutCriteria, gpsTimeoutCriteria;
    IniFile	iniFile;
    char *subscriptionNames[MAX_N_OF_CAMERAS];
    lastImageDateTime = QDateTime::currentDateTimeUtc().addSecs(-1000);
@@ -95,8 +96,20 @@ VimView::VimView(char	*startup_file_name)
          gardaSocketNumber = GARDA_SOCKET_NUMBER;
          netSocket->bind(GARDA_SOCKET_NUMBER);
 
+         microstrainTimeoutCriteria = iniFile.readDouble("GENERAL", "MICROSTRAIN_TIMEOUT", DEFAULT_MICROSTRAIN_TIMEOUT);
+         gpsTimeoutCriteria = iniFile.readDouble("GENERAL", "GPS_TIMEOUT", DEFAULT_GPS_TIMEOUT);
+         fathometerTimeoutCriteria = iniFile.readDouble("GENERAL", "FATHOMETER_TIMEOUT", DEFAULT_FATHOMETER_TIMEOUT);
+         altimeterTimeoutCriteria = iniFile.readDouble("GENERAL", "ALTIMETER_TIMEOUT", DEFAULT_ALTIMETER_TIMEOUT);
+         ctdTimeoutCriteria = iniFile.readDouble("GENERAL", "CTD_TIMEOUT", DEFAULT_CTD_TIMEOUT);
+
          sensorPage = new SensorPage();
          sensorPage->show();
+         sensorPage->setTimeout(GPS_TIMEOUT, gpsTimeoutCriteria);
+         sensorPage->setTimeout(CTD_TIMEOUT, ctdTimeoutCriteria);
+         sensorPage->setTimeout(FATHOMETER_TIMEOUT, fathometerTimeoutCriteria);
+         sensorPage->setTimeout(ALTIMETER_TIMEOUT, altimeterTimeoutCriteria);
+         sensorPage->setTimeout(ATTITUDE_TIMEOUT, microstrainTimeoutCriteria);
+
       }
 
 
@@ -171,7 +184,7 @@ void VimView::setCalcDepth(double theCalcDepth)
 void VimView::setFathometer(double theFathometerValue)
 {
    stWinch->setFathometer(theFathometerValue);
-   sensorPage->setAltimeter(theFathometerValue);
+   sensorPage->setFathometer(theFathometerValue);
 }
 
 void VimView::setFishDepth(double theDepthValue)
@@ -187,6 +200,7 @@ void VimView::setCTD(double theDepth, double theT)
 
 void VimView::setFishAttitude(double heading, double pitch, double roll)
 {
+  sensorPage->setAttitude(heading, pitch, roll);
 }
 
 void VimView::setGPS(double latitude, double longitude)

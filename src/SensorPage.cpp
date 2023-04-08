@@ -26,6 +26,8 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     ctdAgeLabel = new QLabel("Age:");
     ctdAgeValue = new QLabel("???");
 
+    ctdLED = new QLedIndicator(this);
+
     QGridLayout *ctdLayout = new QGridLayout(ctdGroupBox);
     ctdLayout->addWidget(dLabel,0,0);
     ctdLayout->addWidget(dValue,0,1);
@@ -33,6 +35,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     ctdLayout->addWidget(tValue,1,1);
     ctdLayout->addWidget(ctdAgeLabel,2,0);
     ctdLayout->addWidget(ctdAgeValue,2,1);
+    ctdLayout->addWidget(ctdLED,0,2);
 
 
     gpsGroupBox = new QGroupBox("GPS");
@@ -42,6 +45,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     longitudeValue = new QLabel("???");
     gpsAgeLabel = new QLabel("Age:");
     gpsAgeValue = new QLabel("???");
+    gpsLED = new QLedIndicator(this);
 
     QGridLayout *gpsLayout = new QGridLayout(gpsGroupBox) ;
 
@@ -51,12 +55,14 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     gpsLayout->addWidget(longitudeValue,1,1);
     gpsLayout->addWidget(gpsAgeLabel,2,0);
     gpsLayout->addWidget(gpsAgeValue,2,1);
+    gpsLayout->addWidget(gpsLED,0,2);
 
     fathometerGroupBox = new QGroupBox("fathometer");
     fathometerLabel = new QLabel("fathometer");
     fathometerValue = new QLabel("???");
     fathometerAgeLabel = new QLabel("Age:");
     fathometerAgeValue = new QLabel("???");
+    fathometerLED = new QLedIndicator(this);
 
     QGridLayout *fathometerLayout = new QGridLayout(fathometerGroupBox) ;
 
@@ -64,12 +70,14 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     fathometerLayout->addWidget(fathometerValue,0,1);
     fathometerLayout->addWidget(fathometerAgeLabel,1,0);
     fathometerLayout->addWidget(fathometerAgeValue,1,1);
+    fathometerLayout->addWidget(fathometerLED,0,2);
 
     altimeterGroupBox = new QGroupBox("altimeter");
     altimeterLabel = new QLabel("altimeter");
     altimeterValue = new QLabel("???");
     altimeterAgeLabel = new QLabel("Age:");
     altimeterAgeValue = new QLabel("???");
+    altimeterLED = new QLedIndicator(this);
 
     QGridLayout *altimeterLayout = new QGridLayout(altimeterGroupBox) ;
 
@@ -77,6 +85,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     altimeterLayout->addWidget(altimeterValue,0,1);
     altimeterLayout->addWidget(altimeterAgeLabel,1,0);
     altimeterLayout->addWidget(altimeterAgeValue,1,1);
+    altimeterLayout->addWidget(altimeterLED,0,2);
 
     microstrainGroupBox = new QGroupBox("Microstrain");
     pitchLabel = new QLabel("pitch:");
@@ -87,6 +96,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     headingValue = new QLabel("???");
     microstrainAgeLabel = new QLabel("Age:");
     microstrainAgeValue = new QLabel("???");
+    microstrainLED = new QLedIndicator(this);
 
     QGridLayout *microstrainLayout = new QGridLayout(microstrainGroupBox) ;
 
@@ -98,6 +108,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     microstrainLayout->addWidget(headingValue,2,1);
     microstrainLayout->addWidget(microstrainAgeLabel,3,0);
     microstrainLayout->addWidget(microstrainAgeValue,3,1);
+    microstrainLayout->addWidget(microstrainLED,0,2);
 
     QGridLayout *masterLayout = new QGridLayout(this);
     masterLayout->addWidget(ctdGroupBox,0,0);
@@ -148,6 +159,40 @@ void SensorPage::setGPS(double inLat, double inLon)
     lastGPS = QDateTime::currentDateTimeUtc();
 }
 
+void SensorPage::setTimeout(eTimeoutT whichOne, double theTimeout)
+{
+  switch(   whichOne)
+    {
+     case GPS_TIMEOUT:
+      {
+        gpsTimeoutCriteria = theTimeout;
+        break;
+      }
+    case CTD_TIMEOUT:
+      {
+        ctdTimeoutCriteria = theTimeout;
+        break;
+      }
+    case FATHOMETER_TIMEOUT:
+      {
+        fathometerTimeoutCriteria = theTimeout;
+        break;
+      }
+    case ALTIMETER_TIMEOUT:
+      {
+        altimeterTimeoutCriteria = theTimeout;
+        break;
+      }
+    case ATTITUDE_TIMEOUT:
+      {
+          attitudeTimeoutCriteria = theTimeout;
+          break;
+      }
+    default:
+      break;
+    }
+}
+
 void SensorPage::ageTimeout()
 {
     QDateTime  now = QDateTime::currentDateTimeUtc();
@@ -155,22 +200,71 @@ void SensorPage::ageTimeout()
     qint64 delta = lastCTD.msecsTo(now);
     double dt = delta/1000.0;
     ctdAgeValue->setText(QString::number(dt,'f',1) + "s");
+    if(dt > ctdTimeoutCriteria)
+      {
+        ctdLED->setOffColor1(Qt::red);
+        ctdLED->setOffColor2(Qt::red);
+      }
+    else
+      {
+        ctdLED->setOffColor1(Qt::green);
+        ctdLED->setOffColor2(Qt::green);
+      }
 
     delta = lastFathometer.msecsTo(now);
     dt = delta/1000.0;
     fathometerAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+    if(dt > fathometerTimeoutCriteria)
+      {
+        fathometerLED->setOffColor1(Qt::red);
+        fathometerLED->setOffColor2(Qt::red);
+      }
+    else
+      {
+        fathometerLED->setOffColor1(Qt::green);
+        fathometerLED->setOffColor2(Qt::green);
+      }
 
     delta = lastAltimeter.msecsTo(now);
     dt = delta/1000.0;
     altimeterAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+    if(dt > altimeterTimeoutCriteria)
+      {
+        altimeterLED->setOffColor1(Qt::red);
+        altimeterLED->setOffColor2(Qt::red);
+      }
+    else
+      {
+        altimeterLED->setOffColor1(Qt::green);
+        altimeterLED->setOffColor2(Qt::green);
+      }
 
     delta = lastGPS.msecsTo(now);
     dt = delta/1000.0;
     gpsAgeValue->setText(QString::number(dt, 'f', 1) + "s");
+    if(dt > gpsTimeoutCriteria)
+      {
+        gpsLED->setOffColor1(Qt::red);
+        gpsLED->setOffColor2(Qt::red);
+      }
+    else
+      {
+        gpsLED->setOffColor1(Qt::green);
+        gpsLED->setOffColor2(Qt::green);
+      }
 
     delta = lastAttitude.msecsTo(now);
     dt = delta/1000.0;
     microstrainAgeValue->setText(QString::number(dt, 'f', 1) + "s");
-
+    if(dt > attitudeTimeoutCriteria)
+      {
+        microstrainLED->setOffColor1(Qt::red);
+        microstrainLED->setOffColor2(Qt::red);
+      }
+    else
+      {
+        microstrainLED->setOffColor1(Qt::green);
+        microstrainLED->setOffColor2(Qt::green);
+      }
 
 }

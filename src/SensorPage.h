@@ -2,7 +2,15 @@
 #define SENSORPAGE_H
 
 #include <QtWidgets>
+#include "qledindicator.h"
 
+typedef enum {
+  GPS_TIMEOUT,
+  CTD_TIMEOUT,
+  FATHOMETER_TIMEOUT,
+  ALTIMETER_TIMEOUT,
+  ATTITUDE_TIMEOUT
+} eTimeoutT;
 class SensorPage : public QWidget
 {
     Q_OBJECT
@@ -13,6 +21,7 @@ public:
     void        setGPS(double lat, double lon);
     void        setFathometer(double depth);
     void        setAltimeter(double altitude);
+    void        setTimeout(eTimeoutT whichOne, double theTimeout);
 private:
     QGroupBox   *ctdGroupBox;
     QLabel      *dLabel;
@@ -22,6 +31,7 @@ private:
     QLabel      *ctdAgeLabel;
     QLabel      *ctdAgeValue;
     QDateTime   lastCTD;
+    QLedIndicator *ctdLED;
 
     QGroupBox   *gpsGroupBox;
     QLabel      *latitudeLabel;
@@ -31,6 +41,7 @@ private:
     QLabel      *gpsAgeLabel;
     QLabel      *gpsAgeValue;
     QDateTime   lastGPS;
+    QLedIndicator *gpsLED;
 
     QGroupBox   *fathometerGroupBox;
     QLabel      *fathometerLabel;
@@ -38,6 +49,7 @@ private:
     QLabel      *fathometerAgeLabel;
     QLabel      *fathometerAgeValue;
     QDateTime  lastFathometer;
+    QLedIndicator *fathometerLED;
 
     QGroupBox   *altimeterGroupBox;
     QLabel      *altimeterLabel;
@@ -45,6 +57,7 @@ private:
     QLabel      *altimeterAgeLabel;
     QLabel      *altimeterAgeValue;
     QDateTime   lastAltimeter;
+    QLedIndicator *altimeterLED;
 
     QGroupBox   *microstrainGroupBox;
     QLabel      *pitchLabel;
@@ -56,11 +69,17 @@ private:
     QLabel      *microstrainAgeLabel;
     QLabel      *microstrainAgeValue;
     QDateTime   lastAttitude;
+    QLedIndicator *microstrainLED;
 
 
     QString     degreeSymbol;
 
     QTimer      *ageTimer;
+    double      gpsTimeoutCriteria;
+    double      altimeterTimeoutCriteria;
+    double      fathometerTimeoutCriteria;
+    double      ctdTimeoutCriteria;
+    double      attitudeTimeoutCriteria;
 
 
 
