@@ -42,9 +42,6 @@ SystemParameterControl::SystemParameterControl(QWidget *parent) : QWidget(parent
    displayParameterLayout->addWidget(imageSkipSpinner,1,1);
    displayParameterLayout->addWidget(imageSkipLabel,0,1);
 
-
-
-
    rateSlider = new QSlider;
    rateSlider->setRange(0,100);
    rateSlider->setOrientation(Qt::Horizontal);
@@ -145,7 +142,6 @@ void  SystemParameterControl::gardaRateChanged(int rate)
 {
    cameraHz =  (double)rate/10.0;
    rateLabel->setText("rate:" + QString::number(cameraHz,'f',2) + " hz");
-
 
 }
 

@@ -7,14 +7,11 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
    QString cameraNameString = "Camera " + QString::number(cameraNumber) + " (" + cameraName + ")";
    cameraNameLabel = new QLabel(cameraNameString);
 
-
-
    autoMinGain = 0.0;
    autoMaxGain = 40.0;
    autoMinExposure = 0.0;
    autoMaxExposure = 10.0;
    isColor = false;
-
 
    changeGainSlider = new QSlider();
    changeGainSlider->setOrientation(Qt::Horizontal);
@@ -33,8 +30,6 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
 
    lowGainLabel = new QLabel("min gain");
    highGainLabel = new QLabel("max gain");
-
-
 
    autoGainGroupBox = new QGroupBox;
    QGridLayout *autoGainLayout = new QGridLayout(autoGainGroupBox);
@@ -123,13 +118,6 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
    histogramStretchCheckBox = new QCheckBox("Histogram Stretch");
    connect(histogramStretchCheckBox,SIGNAL(clicked(bool)), this, SLOT(changeHistogramStretch(bool)));
 
-
-
-  /* showLightControlCheckBox = new QCheckBox("Light Control");
-   showLightControlCheckBox->setChecked(true);
-   connect(showLightControlCheckBox,SIGNAL(clicked(bool)), myParent, SLOT(showLightControl(bool)));
-
-*/
    imageHistogramPlot = new QCustomPlot(this);
    for(int greyN = 0; greyN < 256; greyN++)
       {
