@@ -89,7 +89,7 @@ VimView::VimView(char	*startup_file_name)
                   }
 
             }
-         systemParameterControl->setFixedWidth(systemParameterSize);
+         //systemParameterControl->setFixedWidth(systemParameterSize);
          char *gardaIPAddress = iniFile.readString("GARDA","IP_ADDRESS",DEFAULT_GARDA_IP_ADDRESS);
          netSocket = new QUdpSocket();
          gardaAddress.setAddress(gardaIPAddress);
