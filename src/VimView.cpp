@@ -1,4 +1,6 @@
 #include "VimView.h"
+#include "../../dsvimlib/include/IniFile.h"
+#include "ImageAcquisitionThread.h"
 
 extern ImageAcquisitionThread       *imageProviderThread[MAX_N_OF_CAMERAS];
 extern QReadWriteLock               imageLock[MAX_N_OF_CAMERAS];
@@ -78,6 +80,7 @@ VimView::VimView(char	*startup_file_name)
                      connect(systemParameterControl,SIGNAL(emitCameraInterval(int)),this,SLOT(sendGardaRateChange(int)));
                      connect(systemParameterControl,SIGNAL(pauseRec(bool)),this,SLOT(pauseRecording(bool)));
                      connect(systemParameterControl,SIGNAL(showWinch(bool)), this, SLOT(showWinchFly(bool)));
+                     connect(systemParameterControl,SIGNAL(showSensors(bool)), this, SLOT(showSensors(bool)));
                      imageArea[nOfCameras] = new QLabel();
                      imageArea[nOfCameras]->setFixedHeight(ySize);
                      imageArea[nOfCameras]->setFixedWidth(xSize);
@@ -274,6 +277,18 @@ void VimView::showWinchFly(bool showIt)
    else
       {
          stWinch->hide();
+      }
+}
+
+void VimView::showSensors(bool showIt)
+{
+   if(showIt)
+      {
+         sensorPage->show();
+      }
+   else
+      {
+         sensorPage->hide();
       }
 }
 void VimView::sendGardaRateChange(int theInt)

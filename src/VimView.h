@@ -6,10 +6,8 @@
 #include <lcm/lcm.h>
 #include <lcm/lcm-cpp.hpp>
 
-#include "../../dsvimlib/include/IniFile.h"
-#include "ImageAcquisitionThread.h"
 #include "VimCameraControl.h"
-#include "LightControlWidget.h"
+//#include "LightControlWidget.h"
 #include "SystemParameterControl.h"
 #include "SensorPage.h"
 #include "cameradefines.h"
@@ -108,6 +106,7 @@ private slots:
    void                   sendGardaRateChange(int theInterval);
    void                   pauseRecording(bool pauseIt);
    void                   showWinchFly(bool showIt);
+   void                   showSensors(bool showIt);
    void                   setSkipValue(int theValue);
    void                   imageHide(int whichImage, bool hideOrNot);
    void                   checkImgReceipt();

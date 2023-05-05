@@ -8,24 +8,24 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
    cameraNameLabel = new QLabel(cameraNameString);
 
    autoMinGain = 0.0;
-   autoMaxGain = 40.0;
+   autoMaxGain = 27.0;  //set for GC1380
    autoMinExposure = 0.0;
    autoMaxExposure = 10.0;
    isColor = false;
 
    changeGainSlider = new QSlider();
    changeGainSlider->setOrientation(Qt::Horizontal);
-   changeGainSlider->setRange(0,400);
+   changeGainSlider->setRange(0,270);
    connect(changeGainSlider,SIGNAL(sliderReleased()),this,SLOT(changeGainValue()));
    connect(changeGainSlider,SIGNAL(valueChanged(int)) ,this,SLOT(changeCameraGain(int)));
 
    autoGainSpinLow = new QDoubleSpinBox();
    autoGainSpinHigh = new QDoubleSpinBox();
-   autoGainSpinLow->setMaximum(40.0);
+   autoGainSpinLow->setMaximum(27.0);
    autoGainSpinLow->setMinimum(0.0);
-   autoGainSpinHigh->setMaximum(40.0);
+   autoGainSpinHigh->setMaximum(27.0);
    autoGainSpinHigh->setMinimum(0.0);
-   autoGainSpinHigh->setValue(40.0);
+   autoGainSpinHigh->setValue(27.0);
    autoGainSpinLow->setValue(0.0);
 
    lowGainLabel = new QLabel("min gain");

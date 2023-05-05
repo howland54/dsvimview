@@ -2,11 +2,15 @@
 
 SystemParameterControl::SystemParameterControl(QWidget *parent) : QWidget(parent)
 {
+   //QGroupBox *parameterGroupBox = new QGroupBox("System Parameters");
    pauseRecordingCheckBox = new QCheckBox("pause recording");
    showWinchFlyCheckBox = new QCheckBox("show Winchfly");
+   showSensorsCheckBox = new QCheckBox("show Sensors");
    showWinchFlyCheckBox->setChecked(true);
+   showSensorsCheckBox->setChecked(true);
    connect(pauseRecordingCheckBox,SIGNAL(clicked(bool)), this, SLOT(pauseRecording(bool)));
    connect(showWinchFlyCheckBox,SIGNAL(clicked(bool)), this, SLOT(winchflyShow(bool)));
+   connect(showSensorsCheckBox,SIGNAL(clicked(bool)), this, SLOT(sensorsShow(bool)));
 
    recordingLEDIndicator = new QLedIndicator(this);
    writeStatusLEDIndicator = new QLedIndicator(this);
@@ -58,7 +62,9 @@ SystemParameterControl::SystemParameterControl(QWidget *parent) : QWidget(parent
    masterLayout->addWidget(pauseRecordingCheckBox,0,2);
    masterLayout->addLayout(lightLayout,0,3);
    masterLayout->addWidget(showWinchFlyCheckBox,0,4);
-
+   masterLayout->addWidget(showSensorsCheckBox,0,5);
+   //QVBoxLayout *thisLayout = new QVBoxLayout(this);
+   //thisLayout->addLayout(masterLayout);
 
 
 
@@ -126,7 +132,9 @@ void SystemParameterControl::setAcqLightOK(bool isItOK)
 
 void SystemParameterControl::skipValueChanged(int theNewSkipValue)
 {
-   emit emitSkipValue(theNewSkipValue);
+
+  imageSkipLabel->setText("display: skip " + QString::number(theNewSkipValue) + " images");
+  emit emitSkipValue(theNewSkipValue);
 }
 
 void SystemParameterControl::pauseRecording(bool pauseIt)
@@ -137,6 +145,12 @@ void SystemParameterControl::winchflyShow(bool showIt)
 {
    emit showWinch(showIt);
 }
+
+void SystemParameterControl::sensorsShow(bool showIt)
+{
+   emit showSensors(showIt);
+}
+
 
 void  SystemParameterControl::gardaRateChanged(int rate)
 {

@@ -225,14 +225,14 @@ void image_t_callback (const lcm::ReceiveBuffer *rbuf, const std::string& channe
    if(isColor)
       {
         // cv::cvtColor(inputImage,colorImage,cv::COLOR_BayerRG2BGR,0);
-       /* cv::namedWindow("windowName"); // Create a window
+          /*cv::namedWindow("windowName"); // Create a window
 
           cv::imshow("windowName", colorImage); // Show our image inside the created window.
 
           cv::waitKey(0); // Wait for any keystroke in the window
 
-          cv::destroyWindow("windowName"); //destroy the created window* */
-
+          cv::destroyWindow("windowName"); //destroy the created window*
+*/
       }
    //if(!isColor)
    {

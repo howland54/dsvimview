@@ -16,6 +16,7 @@ public:
 
 private:
    QCheckBox               *showWinchFlyCheckBox;
+   QCheckBox               *showSensorsCheckBox;
    QCheckBox               *pauseRecordingCheckBox;
 
    QLedIndicator           *recordingLEDIndicator;
@@ -40,6 +41,7 @@ signals:
    void                   emitCameraInterval(int theInterval);
    void                   pauseRec(bool pauseIt);
    void                   showWinch(bool showIt);
+   void                   showSensors(bool showIt);
    void                   emitSkipValue(int theSkipValue);
    void                   hideImageDisplay(int which,bool hideOrNot) ;
 
@@ -52,6 +54,7 @@ private slots:
    void                   sendGardaRateChange();
    void                   pauseRecording(bool pauseIt);
    void                   winchflyShow(bool showIt);
+   void                   sensorsShow(bool showIt);
    void                   skipValueChanged(int theNewValue);
    void                   hideImage(bool hideOrNot);
 

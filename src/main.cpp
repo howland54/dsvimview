@@ -4,6 +4,7 @@
 #include <lcm/lcm-cpp.hpp>
 #include "VimView.h"
 #include "Stwinch.h"
+#include "ImageAcquisitionThread.h"
 
 pthread_attr_t DEFAULT_ROV_THREAD_ATTR;
 ImageAcquisitionThread     *imageProviderThread[MAX_N_OF_CAMERAS];
