@@ -160,8 +160,10 @@ VimView::VimView(char	*startup_file_name)
          connect(imageProviderThread[thisCamera],SIGNAL(newHistogram(QVector<float>,QVector<float>,QVector<float>)),vimCameraControl[thisCamera],SLOT(drawHistogram(QVector<float>,QVector<float>,QVector<float>)));
 
       }
+   currentTimeLabel = new QLabel("current time: ");
    masterLayout->addLayout(imagePairLayout);
    masterLayout->addWidget(systemParameterControl);
+   masterLayout->addWidget(currentTimeLabel);
    stWinch = new StWinch(startup_file_name);
    stWinch->show();
 
@@ -230,6 +232,8 @@ void VimView::checkImgReceipt()
       {
          systemParameterControl->setAcqLightOK(true);
       }
+   QString currentTimeString = nowTime.toString("yyyy/MM/dd hh:mm:ss");
+   currentTimeLabel->setText(currentTimeString);
 
 }
 

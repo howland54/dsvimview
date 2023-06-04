@@ -84,6 +84,8 @@ private:
    int                     imageSkipvalue;
    QDateTime               lastImageDateTime;
 
+   QLabel                  *currentTimeLabel;
+
    double storedAltitude;
    double storedDepth;
 
