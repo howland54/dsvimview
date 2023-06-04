@@ -177,6 +177,7 @@ void VimView::setAltitude(double theAltitude)
 {
    stWinch->setAltitude(theAltitude);
    sensorPage->setAltimeter(theAltitude);
+   storedAltitude = theAltitude;
 }
 
 void VimView::setCalcDepth(double theCalcDepth)
@@ -193,11 +194,17 @@ void VimView::setFathometer(double theFathometerValue)
 void VimView::setFishDepth(double theDepthValue)
 {
    stWinch->setFishDepth(theDepthValue);
+   storedDepth = theDepthValue;
+   double calculatedDepth = theDepthValue + storedAltitude;
+   stWinch->setCalcDepth(calculatedDepth);
 }
 
 void VimView::setCTD(double theDepth, double theT)
 {
   stWinch->setFishDepth(theDepth);
+  storedDepth = theDepth;
+  double calculatedDepth = theDepth + storedAltitude;
+  stWinch->setCalcDepth(calculatedDepth);
   sensorPage->setCTD(theDepth, theT);
 }
 

@@ -84,6 +84,9 @@ private:
    int                     imageSkipvalue;
    QDateTime               lastImageDateTime;
 
+   double storedAltitude;
+   double storedDepth;
+
 
 public slots:
 
