@@ -113,7 +113,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     QGridLayout *masterLayout = new QGridLayout(this);
     masterLayout->addWidget(ctdGroupBox,0,0);
     masterLayout->addWidget(gpsGroupBox,0,1);
-    masterLayout->addWidget(fathometerGroupBox,0,2);
+    masterLayout->addWidget(fathometerGroupBox,2,0);
     masterLayout->addWidget(altimeterGroupBox,1,0);
     masterLayout->addWidget(microstrainGroupBox,1,1);
 
@@ -266,5 +266,6 @@ void SensorPage::ageTimeout()
         microstrainLED->setOffColor1(Qt::green);
         microstrainLED->setOffColor2(Qt::green);
       }
+    update();
 
 }
