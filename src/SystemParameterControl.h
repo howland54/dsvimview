@@ -50,8 +50,8 @@ signals:
 public slots:
 
 private slots:
-   void                   gardaRateChanged(int rate);
-   void                   sendGardaRateChange();
+   //void                   gardaRateChanged(int rate);
+   //void                   sendGardaRateChange();
    void                   pauseRecording(bool pauseIt);
    void                   winchflyShow(bool showIt);
    void                   sensorsShow(bool showIt);

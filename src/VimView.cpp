@@ -2,6 +2,8 @@
 #include "../../dsvimlib/include/IniFile.h"
 #include "ImageAcquisitionThread.h"
 
+/* 26 Jan 2024 jch attempted to change all references to 16bit collection to 8 bit, tried to reflect change to sparton vice microstrain (just a label) */
+
 extern ImageAcquisitionThread       *imageProviderThread[MAX_N_OF_CAMERAS];
 extern QReadWriteLock               imageLock[MAX_N_OF_CAMERAS];
 extern cv::Mat                      cvImage;
@@ -77,7 +79,7 @@ VimView::VimView(char	*startup_file_name)
                      connect(vimCameraControl[nOfCameras],SIGNAL(startTimedStills(double, int)), this, SLOT(startTimedStills(double, int)));
                      connect(vimCameraControl[nOfCameras],SIGNAL(stopTimedStills(int)), this, SLOT(stopTimedStills(int)));
                      connect(vimCameraControl[nOfCameras],SIGNAL(changeDecimationFactor(int)), this, SLOT(changeDecimationFactor(int)));
-                     connect(systemParameterControl,SIGNAL(emitCameraInterval(int)),this,SLOT(sendGardaRateChange(int)));
+                     // connect(systemParameterControl,SIGNAL(emitCameraInterval(int)),this,SLOT(sendGardaRateChange(int)));
                      connect(systemParameterControl,SIGNAL(pauseRec(bool)),this,SLOT(pauseRecording(bool)));
                      connect(systemParameterControl,SIGNAL(showWinch(bool)), this, SLOT(showWinchFly(bool)));
                      connect(systemParameterControl,SIGNAL(showSensors(bool)), this, SLOT(showSensors(bool)));
@@ -93,12 +95,13 @@ VimView::VimView(char	*startup_file_name)
 
             }
          //systemParameterControl->setFixedWidth(systemParameterSize);
+#if 0
          char *gardaIPAddress = iniFile.readString("GARDA","IP_ADDRESS",DEFAULT_GARDA_IP_ADDRESS);
          netSocket = new QUdpSocket();
          gardaAddress.setAddress(gardaIPAddress);
          gardaSocketNumber = GARDA_SOCKET_NUMBER;
          netSocket->bind(GARDA_SOCKET_NUMBER);
-
+#endif
          microstrainTimeoutCriteria = iniFile.readDouble("GENERAL", "MICROSTRAIN_TIMEOUT", DEFAULT_MICROSTRAIN_TIMEOUT);
          gpsTimeoutCriteria = iniFile.readDouble("GENERAL", "GPS_TIMEOUT", DEFAULT_GPS_TIMEOUT);
          fathometerTimeoutCriteria = iniFile.readDouble("GENERAL", "FATHOMETER_TIMEOUT", DEFAULT_FATHOMETER_TIMEOUT);
@@ -302,6 +305,7 @@ void VimView::showSensors(bool showIt)
          sensorPage->hide();
       }
 }
+#if 0
 void VimView::sendGardaRateChange(int theInt)
 {
    char command[32];
@@ -309,7 +313,7 @@ void VimView::sendGardaRateChange(int theInt)
    netSocket->writeDatagram(command,len,gardaAddress,gardaSocketNumber);
 
 }
-
+#endif
 
 void VimView::setDisplaySize(int cameraNumber, int width, int height)
 {

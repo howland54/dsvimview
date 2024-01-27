@@ -132,8 +132,8 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
 
    imageHistogramPlot->setVisible(false);
 
-#if 0
-   binningStateLabel = new QLabel("actual Binning: ?");
+#if 1
+   //binningStateLabel = new QLabel("actual Binning: ?");
 
    repetitionControlWidget = new RepetitionControlWidget(this);
    connect(repetitionControlWidget,SIGNAL(startRepetition(double)),this, SLOT(startRepetition(double)));
@@ -178,7 +178,7 @@ VimCameraControl::VimCameraControl(int cameraNumber, QString cameraName, QWidget
    imageBrightnessLayout->addWidget(gainGroupBox);
    imageBrightnessLayout->addWidget(exposureGroupBox);
    masterLayout->addLayout(imageBrightnessLayout);
-   //masterLayout->addWidget(repetitionControlWidget);
+   masterLayout->addWidget(repetitionControlWidget);
 
 
 }

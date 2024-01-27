@@ -73,9 +73,9 @@ private:
    int                    imageDisplayHeight[MAX_N_OF_CAMERAS];
    StWinch                *stWinch;
 
-   QUdpSocket              *netSocket;
-   QHostAddress            gardaAddress;
-   unsigned short          gardaSocketNumber;
+   //QUdpSocket              *netSocket;
+   //QHostAddress            gardaAddress;
+   //unsigned short          gardaSocketNumber;
 
    bool                    recordingPaused;
    bool                    actualRecordingPauseState;
@@ -108,7 +108,7 @@ private slots:
    void                   startTimedStills(double theInterval, int theCameraNumber);
    void                   stopTimedStills(int theCameraNumber);
    void                   changeDecimationFactor(int theFactor);
-   void                   sendGardaRateChange(int theInterval);
+   //void                   sendGardaRateChange(int theInterval);
    void                   pauseRecording(bool pauseIt);
    void                   showWinchFly(bool showIt);
    void                   showSensors(bool showIt);

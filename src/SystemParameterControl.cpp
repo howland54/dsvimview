@@ -45,7 +45,7 @@ SystemParameterControl::SystemParameterControl(QWidget *parent) : QWidget(parent
    displayParameterLayout->addWidget(showStbdCheckBox,1,0);
    displayParameterLayout->addWidget(imageSkipSpinner,1,1);
    displayParameterLayout->addWidget(imageSkipLabel,0,1);
-
+#if 0
    rateSlider = new QSlider;
    rateSlider->setRange(0,100);
    rateSlider->setOrientation(Qt::Horizontal);
@@ -55,9 +55,9 @@ SystemParameterControl::SystemParameterControl(QWidget *parent) : QWidget(parent
    rateLayout->addWidget(rateSlider);
    connect(rateSlider,SIGNAL(sliderMoved(int)),this,SLOT(gardaRateChanged(int)));
    connect(rateSlider,SIGNAL(sliderReleased()),this,SLOT(sendGardaRateChange()));
-
+#endif
    QGridLayout *masterLayout = new QGridLayout(this);
-   masterLayout->addLayout(rateLayout,0,0);
+   //masterLayout->addLayout(rateLayout,0,0);
    masterLayout->addWidget(displayControlGroupBox,0,1);
    masterLayout->addWidget(pauseRecordingCheckBox,0,2);
    masterLayout->addLayout(lightLayout,0,3);
@@ -151,7 +151,7 @@ void SystemParameterControl::sensorsShow(bool showIt)
    emit showSensors(showIt);
 }
 
-
+#if 0
 void  SystemParameterControl::gardaRateChanged(int rate)
 {
    cameraHz =  (double)rate/10.0;
@@ -165,3 +165,4 @@ void SystemParameterControl::sendGardaRateChange()
    emit emitCameraInterval(interval);
 
 }
+#endif

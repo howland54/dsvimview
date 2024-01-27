@@ -87,7 +87,7 @@ SensorPage::SensorPage(QWidget *parent) : QWidget(parent)
     altimeterLayout->addWidget(altimeterAgeValue,1,1);
     altimeterLayout->addWidget(altimeterLED,0,2);
 
-    microstrainGroupBox = new QGroupBox("Microstrain");
+    microstrainGroupBox = new QGroupBox("AHRS");
     pitchLabel = new QLabel("pitch:");
     pitchValue = new QLabel("???");
     rollLabel = new QLabel("roll:");
